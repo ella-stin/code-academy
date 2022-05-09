@@ -181,3 +181,167 @@ Dan: Aerospace Engineering
 Clementine: Physics
 Shauna: Conservation Science
 */
+
+// 8. The this Keyword
+const robot = {
+  model : '1E78V2',
+  energyLevel : 100,
+  provideInfo(){
+    return `I am ${this.model} and my current energy level is ${this.energyLevel}`;
+  }
+};
+
+console.log(robot.provideInfo()); // I am 1E78V2 and my current energy level is 100
+
+// 9. Arrow Functions and this
+const robot = {
+  energyLevel: 100,
+  checkEnergy: () => {
+    console.log(`Energy is currently at ${this.energyLevel}%.`)
+  }
+}
+
+robot.checkEnergy(); //Energy is currently at undefined%.
+
+const robot = {
+  energyLevel: 100,
+  checkEnergy() {
+    console.log(`Energy is currently at ${this.energyLevel}%.`)
+  }
+}
+
+robot.checkEnergy(); // Energy is currently at 100%.
+
+// 10. Privacy : one of the naming conventions to mean that the property should not be altered
+const robot = {
+  _energyLevel: 100,
+  recharge(){
+    this._energyLevel += 30;
+    console.log(`Recharged! Energy is currently at ${this._energyLevel}%.`)
+  }
+};
+
+robot._energyLevel = 'high';
+console.log(robot.recharge()); 
+// Recharged! Energy is currently at high30%.
+// undefined
+
+// 11. Getters : methods that get and return the internal properties of an object
+const robot = {
+  _model: '1E78V2',
+  _energyLevel: 100,
+  get energyLevel() {
+    if(typeof this._energyLevel === 'number'){
+      return `My current energy level is ${this._energyLevel}`;
+    } else {
+      return 'System malfunction: cannot retrieve energy level';
+    }
+  }
+};
+
+console.log(robot.energyLevel); // My current energy level is 100
+
+// 12. Setters
+const robot = {
+  _model: '1E78V2',
+  _energyLevel: 100,
+  _numOfSensors: 15,
+  get numOfSensors(){
+    if(typeof this._numOfSensors === 'number'){
+      return this._numOfSensors;
+    } else {
+      return 'Sensors are currently down.'
+    }
+  },
+  set numOfSensors(num){
+    if(typeof num === 'number' && num >= 0){
+      this._numOfSensors = num;
+    } else {
+      console.log('Pass in a number that is greater than or equal to 0');
+    }
+  }
+};
+
+robot.numOfSensors = 100;
+console.log(robot.numOfSensors); // 100
+
+// 13. Factory Functions : return an object and can be reused to make multiple object instances
+const robotFactory = (model, mobile) => {
+  return {
+    model : model,
+    mobile : mobile,
+    beep(){
+      console.log('Beep Boop');
+    }
+  }
+}
+
+const tinCan = robotFactory('P-500', true);
+
+tinCan.beep(); // Beep Boop
+
+// 14. Property Value Shorthand
+function robotFactory(model, mobile){
+  return {
+    model,
+    mobile,
+    beep() {
+      console.log('Beep Boop');
+    }
+  }
+}
+
+// To check that the property value shorthand technique worked:
+const newRobot = robotFactory('P-501', false)
+console.log(newRobot.model); // P-501
+console.log(newRobot.mobile); // false
+
+// 15. Destructured Assignment
+const robot = {
+  model: '1E78V2',
+  energyLevel: 100,
+  functionality: {
+    beep() {
+      console.log('Beep Boop');
+    },
+    fireLaser() {
+      console.log('Pew Pew');
+    },
+  }
+};
+
+const {functionality} = robot;
+functionality.beep(); // Beep Boop
+
+// 16. Built-in Object Methods
+const robot = {
+	model: 'SAL-1000',
+  mobile: true,
+  sentient: false,
+  armor: 'Steel-plated',
+  energyLevel: 75
+};
+
+// What is missing in the following method call?
+const robotKeys = Object.keys(robot);
+
+console.log(robotKeys); // [ 'model', 'mobile', 'sentient', 'armor', 'energyLevel' ]
+
+// Declare robotEntries below this line:
+const robotEntries = Object.entries(robot);
+
+console.log(robotEntries); // [ [ 'model', 'SAL-1000' ], [ 'mobile', true ], [ 'sentient', false ], [ 'armor', 'Steel-plated' ], [ 'energyLevel', 75 ] ]
+
+// Declare newRobot below this line:
+const newRobot = Object.assign({laserBlaster: true, voiceRecognition: true}, robot);
+
+console.log(newRobot);
+
+/*
+{ laserBlaster: true,
+  voiceRecognition: true,
+  model: 'SAL-1000',
+  mobile: true,
+  sentient: false,
+  armor: 'Steel-plated',
+  energyLevel: 75 } */
